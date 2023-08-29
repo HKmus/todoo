@@ -15,7 +15,7 @@ class AddTaskDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       content: SizedBox(
         height: 150,
         child: Column(

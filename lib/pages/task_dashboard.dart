@@ -63,6 +63,61 @@ class _TaskDashboardState extends State<TaskDashboard> {
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      surfaceTintColor: Colors.white,
+                      content: SizedBox(
+                        height: 100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Text(
+                              'Delete all tasks',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Colors.red[100], // Background color
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  task = [];
+                                });
+                              },
+                              child: SizedBox(
+                                child: Center(
+                                  child: Text(
+                                    'yes, Delete',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red[600],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.more_vert,
+                size: 30,
+              ))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 60),

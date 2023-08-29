@@ -23,7 +23,7 @@ class TaskTile extends StatelessWidget {
         color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 10),
         child: Row(
           children: [
             Checkbox(value: isCompleted, onChanged: onChanged),
