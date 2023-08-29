@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todoo/task_dashboard.dart';
+import 'package:todoo/pages/task_dashboard.dart';
 
 void main() {
   runApp(const MyApp());
