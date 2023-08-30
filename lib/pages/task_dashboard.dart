@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todoo/data/database.dart';
 import 'package:todoo/utils/add_task_dialog_box.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todoo/utils/task_tile.dart';
 
 class TaskDashboard extends StatefulWidget {
@@ -12,16 +14,40 @@ class TaskDashboard extends StatefulWidget {
 }
 
 class _TaskDashboardState extends State<TaskDashboard> {
-  final TextEditingController _controller = TextEditingController();
+  //reference the hive box
+  final Box _myBox = Hive.box('TBox');
 
-  List<List> task = [];
+  TodoDB db = TodoDB();
+
+  @override
+  void initState() {
+    if (_myBox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      // there already exists data
+      db.loadData();
+    }
+    super.initState();
+  }
+
+  //text controller
+  final TextEditingController _controller = TextEditingController();
+  bool _validate = true;
 
   void addTask() {
     setState(() {
-      task.add([_controller.text.trim(), false]);
-      _controller.clear();
+      if (_controller.text.trim().isEmpty) {
+        _validate = false;
+        Navigator.of(context).pop();
+        _creatTask();
+      } else {
+        _validate = true;
+        db.tasks.add([_controller.text.trim(), false]);
+        _controller.clear();
+        Navigator.of(context).pop();
+        db.updateDataBase();
+      }
     });
-    Navigator.of(context).pop();
   }
 
   void _creatTask() {
@@ -31,7 +57,9 @@ class _TaskDashboardState extends State<TaskDashboard> {
         return AddTaskDialogBox(
           textController: _controller,
           onAdd: addTask,
+          validate: _validate,
           onCancel: () {
+            _validate = true;
             Navigator.of(context).pop();
             _controller.clear();
           },
@@ -42,8 +70,9 @@ class _TaskDashboardState extends State<TaskDashboard> {
 
   void checkBoxChanged(bool? value, int index) {
     setState(() {
-      task[index][1] = !task[index][1];
+      db.tasks[index][1] = !db.tasks[index][1];
     });
+    db.updateDataBase();
   }
 
   @override
@@ -90,8 +119,9 @@ class _TaskDashboardState extends State<TaskDashboard> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  task = [];
+                                  db.tasks = [];
                                 });
+                                db.updateDataBase();
                               },
                               child: SizedBox(
                                 child: Center(
@@ -121,19 +151,20 @@ class _TaskDashboardState extends State<TaskDashboard> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 60),
-        child: task.isNotEmpty
+        child: db.tasks.isNotEmpty
             ? ListView.builder(
-                itemCount: task.length,
+                itemCount: db.tasks.length,
                 itemBuilder: (BuildContext context, int index) {
                   return TaskTile(
-                    task: task[index][0],
-                    isCompleted: task[index][1],
+                    task: db.tasks[index][0],
+                    isCompleted: db.tasks[index][1],
                     onChanged: (value) =>
-                        checkBoxChanged(task[index][1], index),
+                        checkBoxChanged(db.tasks[index][1], index),
                     onDelete: () {
                       setState(() {
-                        task.removeAt(index);
+                        db.tasks.removeAt(index);
                       });
+                      db.updateDataBase();
                     },
                   );
                 },

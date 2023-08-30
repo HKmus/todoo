@@ -1,7 +1,16 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todoo/pages/task_dashboard.dart';
 
-void main() {
+void main() async {
+  //init hive
+  await Hive.initFlutter();
+
+  //open a box
+  Box box = await Hive.openBox('TBox');
+
   runApp(const MyApp());
 }
 

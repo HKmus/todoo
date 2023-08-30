@@ -4,12 +4,14 @@ class AddTaskDialogBox extends StatelessWidget {
   final TextEditingController textController;
   final VoidCallback onAdd;
   final VoidCallback onCancel;
+  final bool validate;
 
   const AddTaskDialogBox({
     super.key,
     required this.textController,
     required this.onAdd,
     required this.onCancel,
+    required this.validate,
   });
 
   @override
@@ -23,9 +25,10 @@ class AddTaskDialogBox extends StatelessWidget {
           children: [
             TextField(
               controller: textController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Add new task',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
+                errorText: validate ? null : 'Value Can\'t Be Empty',
               ),
             ),
             Row(
